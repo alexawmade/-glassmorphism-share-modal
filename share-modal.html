@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Project Modal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal {
+            background: #1a1a1a;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 24px 24px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #999;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 20px 24px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .tab {
+            background: transparent;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: #999;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: #555;
+            color: #fff;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: #444;
+        }
+
+        .modal-content {
+            padding: 24px;
+        }
+
+        .invite-section {
+            margin-bottom: 24px;
+        }
+
+        .invite-description {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .invite-input-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .email-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .email-chip {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chip-remove {
+            background: transparent;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .chip-remove:hover {
+            color: #fff;
+        }
+
+        .email-input {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 14px;
+            min-width: 150px;
+            flex: 1;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: #555;
+        }
+
+        .permission-select {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .invite-btn {
+            background: #8b5a3c;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 24px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .invite-btn:hover {
+            background: #9d6644;
+        }
+
+        .toggle-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .toggle-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-icon {
+            font-size: 20px;
+        }
+
+        .toggle-text h4 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .toggle-text p {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3a3a3a;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background-color: #6366f1;
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .people-list {
+            margin-bottom: 24px;
+        }
+
+        .person-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .person-item:last-child {
+            border-bottom: none;
+        }
+
+        .person-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .person-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+        }
+
+        .person-details h4 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .person-details p {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .role-badge {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 6px 16px;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .public-access-section {
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .public-access-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .public-access-header h4 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .url-copy-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .url-input {
+            flex: 1;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .copy-btn {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #3a3a3a;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .footer-link {
+            color: #999;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .footer-link:hover {
+            color: #fff;
+        }
+
+        .settings-btn {
+            background: transparent;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 8px 16px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Share project</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active">
+                    <span>👥</span> Invite people
+                </button>
+                <button class="tab">
+                    <span>📡</span> Publish
+                </button>
+                <button class="tab">
+                    <span>⬇</span> Export
+                </button>
+                <button class="tab">
+                    <span>🔗</span> Embed
+                </button>
+            </div>
+
+            <div class="modal-content">
+                <div class="invite-section">
+                    <p class="invite-description">Invite your friends by entering their email address and get them onboard.</p>
+                    <div class="invite-input-row">
+                        <div class="email-chips" id="emailChips">
+                            <div class="email-chip">
+                                Jason02@gmail.com
+                                <button class="chip-remove" onclick="removeChip(this)">&times;</button>
+                            </div>
+                        </div>
+                        <input type="email" class="email-input" id="emailInput" placeholder="Enter email..." onkeypress="handleEmailEnter(event)">
+                        <select class="permission-select" id="permissionSelect">
+                            <option>Can edit</option>
+                            <option>Can view</option>
+                            <option>Can comment</option>
+                        </select>
+                        <button class="invite-btn" onclick="addEmail()">Invite</button>
+                    </div>
+                </div>
+
+                <div class="toggle-section">
+                    <div class="toggle-info">
+                        <span class="toggle-icon">⚡</span>
+                        <div class="toggle-text">
+                            <h4>Editors can invite people</h4>
+                            <p>Editors in your file can invite others to collaborate.</p>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="people-list">
+                    <div class="person-item">
+                        <div class="person-info">
+                            <div class="person-avatar">BW</div>
+                            <div class="person-details">
+                                <h4>Bruce Wayne</h4>
+                                <p>iambatman@gmail.com</p>
+                            </div>
+                        </div>
+                        <span class="role-badge">Owner</span>
+                    </div>
+
+                    <div class="person-item">
+                        <div class="person-info">
+                            <div class="person-avatar">ZJ</div>
+                            <div class="person-details">
+                                <h4>Zami James</h4>
+                                <p>Zamithegreat@gmail.com</p>
+                            </div>
+                        </div>
+                        <select class="role-badge">
+                            <option>Editor</option>
+                            <option>Viewer</option>
+                        </select>
+                    </div>
+
+                    <div class="person-item">
+                        <div class="person-info">
+                            <div class="person-avatar">JT</div>
+                            <div class="person-details">
+                                <h4>Josh Tomas</h4>
+                                <p>Joshtomas1998@gmail.com</p>
+                            </div>
+                        </div>
+                        <select class="role-badge">
+                            <option>Viewer</option>
+                            <option>Editor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="public-access-section">
+                    <div class="public-access-header">
+                        <h4>
+                            <span>🌐</span> Public access
+                        </h4>
+                        <label class="toggle">
+                            <input type="checkbox" id="publicToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="url-copy-row">
+                        <input type="text" class="url-input" value="https://www.collabease.com/watch?v=rVrkB" readonly>
+                        <button class="copy-btn" id="copyBtn" onclick="copyUrl()">Copy</button>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="footer-link">View analytics</a>
+                    <button class="settings-btn">
+                        <span>⚙️</span> Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closeModal() {
+            alert('Modal closed!');
+        }
+
+        function removeChip(button) {
+            button.parentElement.remove();
+        }
+
+        function addEmail() {
+            const input = document.getElementById('emailInput');
+            const email = input.value.trim();
+
+            if (email && validateEmail(email)) {
+                const chipsContainer = document.getElementById('emailChips');
+                const chip = document.createElement('div');
+                chip.className = 'email-chip';
+                chip.innerHTML = `
+                    ${email}
+                    <button class="chip-remove" onclick="removeChip(this)">&times;</button>
+                `;
+                chipsContainer.appendChild(chip);
+                input.value = '';
+            } else {
+                alert('Please enter a valid email address');
+            }
+        }
+
+        function handleEmailEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                addEmail();
+            }
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function copyUrl() {
+            const urlInput = document.querySelector('.url-input');
+            const copyBtn = document.getElementById('copyBtn');
+
+            urlInput.select();
+            document.execCommand('copy');
+
+            copyBtn.textContent = 'Copied!';
+            copyBtn.classList.add('copied');
+
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy';
+                copyBtn.classList.remove('copied');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
