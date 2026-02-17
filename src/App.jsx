@@ -20,7 +20,7 @@ function App() {
           className={`glass-button ${isPulsing ? 'pulsing' : ''}`}
           onClick={handleClick}
         >
-          <span className="button-text">Share Project</span>
+          <span className="button-text">Share</span>
           {isPulsing && (
             <>
               <span className="pulse-ring pulse-ring-1"></span>

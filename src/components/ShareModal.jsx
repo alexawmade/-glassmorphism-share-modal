@@ -8,7 +8,7 @@ export default function ShareModal({ isOpen, onClose }) {
   const [emailInput, setEmailInput] = useState('')
   const [permission, setPermission] = useState('Can edit')
   const [editorsCanInvite, setEditorsCanInvite] = useState(true)
-  const [publicAccess, setPublicAccess] = useState(true)
+  const [publicAccess, setPublicAccess] = useState(false)
   const [copied, setCopied] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -305,28 +305,31 @@ export default function ShareModal({ isOpen, onClose }) {
                     <span className="toggle-slider"></span>
                   </label>
                 </div>
-                {publicAccess && (
-                  <div className="url-copy-row">
-                    <input
-                      type="text"
-                      className="url-input"
-                      value="https://www.collabease.com/watch?v=rVrkB"
-                      readOnly
-                    />
-                    <button
-                      className={`copy-btn ${copied ? 'copied' : ''}`}
-                      onClick={copyUrl}
-                    >
-                      {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                )}
+                <div className={`url-copy-row ${publicAccess ? 'visible' : ''}`}>
+                  <input
+                    type="text"
+                    className="url-input"
+                    value="https://www.collabease.com/watch?v=rVrkB"
+                    readOnly
+                  />
+                  <button
+                    className={`copy-btn ${copied ? 'copied' : ''}`}
+                    onClick={copyUrl}
+                  >
+                    {copied ? 'Copied!' : 'Copy'}
+                  </button>
+                </div>
               </div>
 
               <div className="modal-footer">
                 <a href="#" className="footer-link">View analytics</a>
                 <button className="settings-btn">
-                  <span>⚙️</span> Settings
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                  Settings
                 </button>
               </div>
             </>
