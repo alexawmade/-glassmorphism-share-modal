@@ -196,7 +196,7 @@ export default function ShareModal({ isOpen, onClose }) {
             <>
               <div className="invite-section">
                 <p className="invite-description">
-                  Invite your friends by entering their email address and get them onboard.
+                  Invite users by entering their email address and get them onboard.
                 </p>
                 <div className="invite-input-row">
                   <div className="email-chips-container">
